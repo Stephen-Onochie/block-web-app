@@ -1,8 +1,8 @@
-Block – Repository Architecture Overview
+# Block – Repository Architecture Overview
 
 This document explains the initial Block monorepo structure so Jamie, Aaron, and Stephen fully understand how the system works during Sprint 1.
 
-📁 Root Repository Structure
+## 📁 Root Repository Structure
 BLOCK/
   api/           ← Backend (NestJS + Prisma + Clustering Engine)
   app/           ← Frontend (Next.js App Router on Vercel)
