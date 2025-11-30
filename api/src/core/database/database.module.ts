@@ -1,0 +1,1 @@
+//exports PrismaService to the rest of the app
