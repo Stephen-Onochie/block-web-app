@@ -1,3 +1,6 @@
+//sync with command -> npx prisma migrate dev --name init
+
+
 generator client {
   provider = "prisma-client"
 }
@@ -6,7 +9,33 @@ datasource db {
   provider = "postgresql"
 }
 
+// used to test database connection
 model TestPing {
   id        String   @id @default(uuid()) @db.Uuid
   createdAt DateTime @default(now())
+}
+
+//house info within cluster
+model House {
+  id        String @id @default(uuid()) @db.Uuid
+  address   String @default("Unknown Address")
+  latitude  Float  @default(0.0)
+  longitude Float  @default(0.0)
+  status   String @default("available")
+  clusterId String @default("unknown")
+}
+
+//generated paths to houses within clusters
+model Route {
+  id       String @id @default(uuid()) @db.Uuid
+  clusterId String @default("unknown")
+  orderedHouseIds String[] @default([])
+}
+
+//generated group of routes and houses for reps (cluster)
+model Cluster {
+  id       String @id @default(uuid()) @db.Uuid
+  centriodLat Float  @default(0.0)
+  centriodLong Float  @default(0.0)
+  routeIds String[] @default([])
 }
