@@ -21,7 +21,7 @@ model House {
   address   String @default("Unknown Address")
   latitude  Float  @default(0.0)
   longitude Float  @default(0.0)
-  status   String @default("available")
+  status   String @default("Not Visited")
   clusterId String @default("unknown")
 }
 
