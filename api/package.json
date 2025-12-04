@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@prisma/client": "^7.0.1",
+    "@prisma/client": "^7.1.0",
     "axios": "^1.13.2",
     "next": "14.2.5",
     "okhttp": "^1.1.0",
