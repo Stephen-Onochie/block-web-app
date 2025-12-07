@@ -2,11 +2,12 @@
 
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  url = "postgresql://postgres:DV+DcW_43rp9ZhT@db.jzzgtemqjibvyjdjjxdb.supabase.co:5432/postgres"
 }
 
 // used to test database connection
@@ -35,7 +36,7 @@ model MockHouse {
   priorityScore Float @default(0.0) //weighting for testing
   visitDurationMinutes Int @default(0) //time visited in minutes
   status  String @default("ACTIVE") //ACTIVE, SKIIPPED, INVALID
-  isCornerHosue Boolean @default(false) // for advanced route testing
+  isCornerHouse Boolean @default(false) // for advanced route testing
   streetName String @default("Unknown Street") //street for clustering
   houseNumber Int @default(0) //house number for clustering
   createdAt DateTime @default(now()) //timestamp

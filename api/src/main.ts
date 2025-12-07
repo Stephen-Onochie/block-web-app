@@ -1,12 +1,13 @@
-//main backend code
 
-const app = require('@nestjs/platform-express');
-
+const express = require('@nestjs/platform-express');
+const app = express();
 const PORT = 8080;
+
+app.use(express.json());
 
 //frontend api request for specific property data
 app.get('/property-data', (req: any,res: any) => {
-    res.send(200).send({
+    res.status(200).send({
         //property data from ATTOM API
     })
 });
