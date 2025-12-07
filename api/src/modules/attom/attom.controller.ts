@@ -1,17 +1,18 @@
 //controller module to use ATTOM API Service
+
 import 'dotenv/config';
 import axios from 'axios';
 
 //base URL for ATTOM API
-const baseURL = process.env.ATTOM_API_BASE_URL;
+const baseURL = "https://api.gateway.attomdata.com";
 
 //ATTOM API key
-const apiKey = process.env.ATTOM_API_KEY;
+const apiKey = "a22ba0e42d765077dc9e5593f8861bee";
 
 //property detail - function to get full details on any property by address
 export async function getPropertyData(address1: any, address2: any) {
     try {
-        const res = await axios.get(
+        const response = await axios.get(
             `${baseURL}/propertyapi/v1.0.0/property/detail`,
             {
                 params: {address1, address2 },
@@ -22,7 +23,7 @@ export async function getPropertyData(address1: any, address2: any) {
             }
         );
 
-        console.log(JSON.stringify(res.data, null, 2));
+        return response.data;
     } catch (err) {
         if (axios.isAxiosError(err)) {
             console.error('ATTOM error:', err.response?.status, err.response?.data || err.message);
@@ -76,7 +77,7 @@ export type SnapshotParams = {
       }
     );
 
-  console.log(JSON.stringify(response.data, null, 2));
+  return response.data;
   } catch (err: any) {
     console.error("ATTOM Snapshot Error:", err.response?.data || err.message);
     throw new Error("Failed to fetch snapshot from ATTOM");

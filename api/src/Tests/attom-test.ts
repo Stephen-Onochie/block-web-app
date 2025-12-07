@@ -5,10 +5,10 @@ import axios from 'axios';
 
 
 //base URL for ATTOM API
-const baseURL = process.env.ATTOM_API_BASE_URL;
+const baseURL = "https://api.gateway.attomdata.com";
 
 //ATTOM API key
-const apiKey = process.env.ATTOM_API_KEY;
+const apiKey = "a22ba0e42d765077dc9e5593f8861bee";
 
 //property detail - function to get full details on any property by address
 async function getPropertyByAddress(address1: any, address2: any) {
@@ -89,12 +89,7 @@ type SnapshotParams = {
 
 
 //test functions
-getPropertySnapshot({
-  latitude: 39.7047,
-  longitude: -105.0814,
-  radius: 2,
-  pagesize: 50,
-});
+getPropertyByAddress("10634 Cyrus Drive", "Indianapolis, IN, 46231");
 
 /**
  * ATTOM Property Snapshot Function
