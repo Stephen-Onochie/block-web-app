@@ -1,10 +1,23 @@
 import 'dotenv/config';
 import { PrismaClient } from '@prisma/client'
-import { getPropertyData } from '../modules/attom/attom.controller.ts';
+import { getPropertyData, propertySearch } from '../modules/attom/attom.controller.ts';
 
 const prisma = new PrismaClient();
 
-async function main() {
+
+
+async function clear() {
+  try {
+      await prisma.mockHouse.deleteMany({});
+  } catch (error) {
+    console.error('Error clearing MockHouse data:', error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+async function AttomToSupabaseTest() {
   var mainAddress = "";
   var lat = 0;
   var lon = 0;
@@ -29,7 +42,7 @@ async function main() {
   statusCode = "ACTIVE";
   isCorner = false;
   streetNameValue = attomData.property[0].address.line1 || "Unknown";
-  var houseNum = 0;
+  houseNum = 0;
 
   try {
     const result = await prisma.mockHouse.create({
@@ -56,18 +69,79 @@ async function main() {
   }
 }
 
-async function clear() {
+async function mainTest() {
+  //variables for each property field
+  var mainAddress = "";
+  var lat = 0;
+  var lon = 0;
+  var neighborhoodValue = "";
+  var priority = 0;
+  var visitDuration = 0;
+  var statusCode = "";
+  var isCorner = false;
+  var streetNameValue = "";
+  var houseNum = 0;
+  var count = 0;
+
   try {
-      await prisma.mockHouse.deleteMany({});
-  } catch (error) {
-    console.error('Error clearing MockHouse data:', error);
-    throw error;
-  } finally {
-    await prisma.$disconnect();
+  //loop through calculated Attom pages (Use Postman to get total and pagesize; i = total/pagesize)
+  const lastPage = 200;//200; //(10,000 total / 50 pagesize)
+  for (let page = 1; page <= lastPage; page++) {
+    //fetch property snapshot data from ATTOM API for current page
+    const attomData = await propertySearch({
+      geoIdV4: "f54b1b07afd4de52f27b5edf15ae972f", //Hendricks County, IN
+      pagesize: 50,
+      page: page,
+    });
+
+    //cycle through each found property
+    for (const property of attomData.property) {
+        //check if residence is single family
+        if (property.summary.proptype == "SFR") {
+          //assign values from attomData to variables
+          mainAddress = property.address.line1 + ", " + property.address.line2;
+          lat = parseFloat(property.location.latitude);
+          lon = parseFloat(property.location.longitude);
+          neighborhoodValue = "Unknown";
+          priority = 1.0;
+          visitDuration = 0;
+          statusCode = "ACTIVE";
+          isCorner = false;
+          streetNameValue = property.address.line1 || "Unknown";
+          houseNum = 0;
+
+          //save data to supabase
+          var propertySaved = await prisma.mockHouse.create({
+            data: {
+              address: mainAddress,
+              latitude: lat,
+              longitude: lon,
+              neighborhood: neighborhoodValue,
+              priorityScore: priority,
+              visitDurationMinutes: visitDuration,
+              status: statusCode,   // or just "ACTIVE" if you mapped it as string
+              isCornerHouse: isCorner,
+              streetName: streetNameValue.replace(/\d+/g, '').trim(),
+              houseNumber: houseNum,
+            },
+          });
+          count++;
+          console.log('Houses Saved: ', count);
+
+        }
+    }
+    
   }
+} catch (error) {
+  console.error('Error in mainTest execution:', error);
+  throw error;
+} finally {
+  await prisma.$disconnect();
 }
 
-clear()
+}
+
+mainTest()
   .then(() => {
     console.log('Data Push complete!');
   })
